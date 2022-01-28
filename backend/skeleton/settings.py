@@ -13,6 +13,9 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 from pathlib import Path
 from os import environ
 
+def env(key):
+    return environ[key] if key in environ else ''
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -21,12 +24,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = environ['DEBUG'] == 'True'
+DEBUG = env('DEBUG') == 'True'
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'secret-key-lua8phooShahph9eilei3gahi3aeKaiRuoquohwa' if DEBUG else environ['SECRET_KEY']
+SECRET_KEY = 'secret-key-lua8phooShahph9eilei3gahi3aeKaiRuoquohwa' if DEBUG else env('SECRET_KEY')
 
-ALLOWED_HOSTS = environ['ALLOWED_HOSTS'].split(',')
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 
 # Application definition
@@ -81,9 +84,9 @@ WSGI_APPLICATION = 'skeleton.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': environ['POSTGRES_DB'],
-        'USER': environ['POSTGRES_USER'],
-        'PASSWORD': environ['POSTGRES_PASSWORD'],
+        'NAME': env('POSTGRES_DB'),
+        'USER': env('POSTGRES_USER'),
+        'PASSWORD': env('POSTGRES_PASSWORD'),
         'HOST': 'postgres',
         'PORT': '5432',
     }

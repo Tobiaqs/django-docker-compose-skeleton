@@ -4,7 +4,7 @@ services:
   django:
     build:
       context: ./src/backend
-    command: gunicorn --worker-tmp-dir /dev/shm --workers=2 --threads=2 --bind 0.0.0.0:8000 skeleton.wsgi:application
+      target: prod-backend
     restart: unless-stopped
     environment:
       - POSTGRES_USER
@@ -16,8 +16,6 @@ services:
       - SECRET_KEY
     expose:
       - 8000
-    volumes:
-      - ./src/backend/:/app/
     networks:
       - app
       - proxy_<your-project-name>_prod
@@ -39,5 +37,5 @@ volumes:
 
 networks:
     app:
-    proxy_<your-project-name>_dev:
+    proxy_<your-project-name>_prod:
         external: true
