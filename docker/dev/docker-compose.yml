@@ -1,0 +1,55 @@
+version: "3.9"
+
+services:
+  django:
+    build:
+      context: ./src/backend
+    command: python manage.py runserver 0.0.0.0:8000
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+      - VIRTUAL_HOST=${VIRTUAL_HOST_DJANGO}
+      - ALLOWED_HOSTS=${VIRTUAL_HOST_DJANGO}
+      - DEBUG=True
+    expose:
+      - 8000
+    volumes:
+      - ./src/backend/:/app/
+    networks:
+      - app
+      - proxy_<your-project-name>_dev
+
+  adminer:
+      image: adminer
+      restart: unless-stopped
+      networks:
+          - app
+          - proxy_<your-project-name>_dev
+      environment:
+          - ADMINER_DEFAULT_SERVER=postgres
+          - VIRTUAL_HOST=${VIRTUAL_HOST_ADMINER}
+          - VIRTUAL_PORT=8080
+      expose:
+          - 8080
+  
+  postgres:
+    image: postgres:14.1
+    restart: unless-stopped
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - app
+    environment:
+      - POSTGRES_DB
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+
+volumes:
+    postgres:
+
+networks:
+    app:
+    proxy_<your-project-name>_dev:
+        external: true

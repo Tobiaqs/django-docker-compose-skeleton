@@ -1,0 +1,21 @@
+version: '3'
+
+services:
+  nginx-proxy:
+    restart: unless-stopped
+    build:
+        context: .
+    ports:
+      - "80:80"
+    networks:
+      - proxy_<your-project_name>_dev
+      - proxy_<your-project_name>_prod
+    volumes:
+      - ./conf/custom.conf:/etc/nginx/conf.d/custom.conf:ro
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+
+networks:
+  proxy_<your-project-name>_dev:
+    external: true
+  proxy_<your-project-name>_prod:
+    external: true
